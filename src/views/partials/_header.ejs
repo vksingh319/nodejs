@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Brilworks</title>
+    <!-- NAVIGATION -->
+    <link rel="stylesheet" href="https://bootswatch.com/4/lux/bootstrap.min.css">
+  </head>
+  <script src="https://code.jquery.com/jquery-3.4.0.min.js"></script>
+  <script src="https://momentjs.com/downloads/moment.js"></script>
+  <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
+ 
+  <script  type="text/javascript">
+     $(document).ready(function () {
+        var x = document.cookie;
+        var sessionId = getUrlParameter('sessionId');
+        if(sessionId){
+          localStorage.setItem('token', sessionId);
+          if(window.atob(sessionId) === 'SUPER_ADMINBw0hbYL1iMxs4lz3xud28dKXuBzeyIgT'){
+            $('#reportLink').show();
+          }
+        }
+        
+        const startOfMonth = moment().startOf('month').format('YYYY-MM-DD');
+        const endOfMonth   = moment().endOf('month').format('YYYY-MM-DD');
+        const today   = moment().format('YYYY-MM-DD');
+        $("#fromDate").val(startOfMonth);
+        $("#toDate").val(endOfMonth);
+        $("#dol").val(today);
+
+        $('#autoSwitch').click(function() {
+          $('#manual').toggle("slide");
+        });
+        $('#search').click(function() {
+          $('#searchForm').attr('action', window.location.pathname);
+          $("#searchForm").submit();
+        });
+
+        $('#addLog').click(function() {
+          var $createLogDiv = $('#createLog');
+          var $displayDiv = $('#displayLog');
+          if (!$createLogDiv.is(':visible')) {
+            $('#displayLog').addClass("col-md-8");
+            $('#displayLog').removeClass("col-md-12");
+          } else {
+            $('#displayLog').addClass("col-md-12");
+            $('#displayLog').removeClass("col-md-8");
+          }
+
+          $('#createLog').toggle("slide");
+        });
+
+     });
+
+     function getUrlParameter(name) {
+            name = name.replace(/[\[]/, '\\[').replace(/[\]]/, '\\]');
+            var regex = new RegExp('[\\?&]' + name + '=([^&#]*)');
+            var results = regex.exec(location.search);
+            return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
+        };
+        function exportTableToExcel(tableID, filename = ''){
+        var downloadLink;
+        var dataType = 'application/vnd.ms-excel';
+        var tableSelect = document.getElementById(tableID);
+        var tableHTML = tableSelect.outerHTML.replace(/ /g, '%20');
+        
+        // Specify file name
+        filename = filename?filename+'.xls':'excel_data.xls';
+        
+        // Create download link element
+        downloadLink = document.createElement("a");
+        
+        document.body.appendChild(downloadLink);
+        
+        if(navigator.msSaveOrOpenBlob){
+            var blob = new Blob(['\ufeff', tableHTML], {
+                type: dataType
+            });
+            navigator.msSaveOrOpenBlob( blob, filename);
+        }else{
+            // Create a link to the file
+            downloadLink.href = 'data:' + dataType + ', ' + tableHTML;
+        
+            // Setting the file name
+            downloadLink.download = filename;
+            
+            //triggering the function
+            downloadLink.click();
+        }
+    }
+  </script>
+  <script type="text/javascript">
+    $(function() {
+    
+        var start = moment().subtract(29, 'days');
+        var end = moment();
+    
+        function cb(start, end) {
+            $('#reportrange span').html(start.format('MMMM D, YYYY') + ' - ' + end.format('MMMM D, YYYY'));
+            $("#fromDate").val(start.format('YYYY-MM-DD'));
+            $("#toDate").val(end.format('YYYY-MM-DD'));
+        }
+    
+        $('#reportrange').daterangepicker({
+            startDate: start,
+            endDate: end,
+            ranges: {
+               'Today': [moment(), moment()],
+               'Yesterday': [moment().subtract(1, 'days'), moment().subtract(1, 'days')],
+               'Last 7 Days': [moment().subtract(6, 'days'), moment()],
+               'Last 30 Days': [moment().subtract(29, 'days'), moment()],
+               'This Month': [moment().startOf('month'), moment().endOf('month')],
+               'Last Month': [moment().subtract(1, 'month').startOf('month'), moment().subtract(1, 'month').endOf('month')]
+            }
+        }, cb);
+    
+        cb(start, end);
+    
+    });
+    </script>
+  <body>
+
+    <!-- navigation -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <a class="navbar-brand" href="/">Brilworks</a>
+      <div id="reportLink" style="display:none;">
+        <a class="navbar-brand" href="/l/report">Report</a>
+      </div>
+      <form action="/l/dashboard" method="GET" id="searchForm">
+        <div class="form-group">
+              <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 
+              1px solid #ccc; width: 100%; font-size:25px; margin-top: 15px;">
+                  <i class="fa fa-calendar"></i>&nbsp;
+                  <span></span> <i class="fa fa-caret-down"></i>
+              </div>
+              <input type="date" id="fromDate" name="fromDate" hidden>
+              <input type="date" id="toDate" name="toDate" hidden>
+        </div>
+        
+    </form>
+      <div class="form-group">
+        <button type="submit" id="search" class="btn btn-primary" style="margin-left: 10px; margin-top: 15px;background: #fff; color: black;">Search</button>
+      </div>
+      <div class="form-group"> 
+        <button type="submit" id="addLog" class="btn btn-primary" style="margin-left: 10px; margin-top: 15px;background: #fff; color: black;">Add Log</button>
+      </div>
+      <a class="navbar-brand" style="margin-left:250px;" href="/logout">Logout</a>
+    </nav>
+    

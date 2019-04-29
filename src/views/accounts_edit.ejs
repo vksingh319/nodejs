@@ -1,0 +1,37 @@
+<% include partials/_header %>
+
+<div class="container mt-5">
+  <div class="row">
+    <div class="col-md-5 offset-md-3 card">
+      <div class="card-body">
+        <form action="/l/update/<%= data.id %>" method="POST">
+          <div class="form-group">
+              <span class="project">Project</span>
+              <label name="code"  class="form-control"><%= data.code%></label>
+          </div>
+          <div class="form-group">
+              <span class="type">Type</span>
+              <label name="code"  class="form-control"><%= data.type%></label>
+          </div>
+          <div class="form-group">
+              <span class="type">Log Date</span>
+              <input type="date" name="dol" value="<%= data.dol%>" placeholder="Date of Log" class="form-control">
+            </div>
+          <div class="form-group">
+            <span class="hours">Hours</span>
+            <input type="time" name="hours" value="<%= data.hours%>" placeholder="Hours" class="form-control">
+          </div>
+          <div class="form-group">
+            <input type="text" name="comments" value="<%= data.comments%>" placeholder="comments" class="form-control">
+          </div>
+
+          <button type="submit" class="btn btn-primary">
+            Update Log
+          </button>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<% include partials/_footer %>

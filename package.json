@@ -1,0 +1,29 @@
+{
+  "name": "crud-nodejs-mysql",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "dependencies": {
+    "bootstrap-toggle": "^2.2.2",
+    "btoa": "^1.2.1",
+    "cookie-parser": "^1.4.4",
+    "ejs": "^2.5.8",
+    "express": "^4.16.3",
+    "express-myconnection": "^1.0.4",
+    "moment": "^2.24.0",
+    "morgan": "^1.9.0",
+    "mysql": "^2.15.0",
+    "swagger-ui-express": "^4.0.2"
+  },
+  "devDependencies": {
+    "express-session": "^1.16.1",
+    "jquery": "^3.4.0",
+    "nodemon": "^1.17.3"
+  },
+  "scripts": {
+    "dev": "nodemon src/app.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC"
+}
