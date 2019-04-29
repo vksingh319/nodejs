@@ -1,0 +1,57 @@
+<% include partials/_header %>
+
+<script>
+    window.onload = function () {
+
+      debugger;
+    
+      var data1= "<%= data %>";
+
+      var charData=[]; 
+      var i;
+      for (i = 0; i < data1.length; i++) { 
+        console.log(JSON.parse(data1[i]));
+        charData.push({ x: new Date(2017, 0), y: data1[i].timeMin });
+      }
+
+      console.log(charData.length);
+      for (i = 0; i < charData.length; i++) { 
+        console.log(charData[i].x +','+ charData[i].y);
+      }
+
+
+    var options = {
+      animationEnabled: true,  
+      title:{
+        text: "Monthly Sales - 2017"
+      },
+      axisX: {
+        valueFormatString: "MMM"
+      },
+      axisY: {
+        title: "Sales (in USD)",
+        prefix: "$",
+        includeZero: false
+      },
+      data: [{
+        yValueFormatString: "$#,###",
+        xValueFormatString: "MMMM",
+        type: "spline",
+        dataPoints: charData
+      }]
+    };
+
+    $("#chartContainer").CanvasJSChart(options);
+    
+    }
+    </script>
+<script src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
+
+<div class="mt-5">
+  <div class="row">
+    <div class="col-md-12" id="chartContainer" style="height: 370px; max-width: 920px; margin: 0px auto;">
+    </div>
+  </div>      
+</div>
+
+<% include partials/_footer %>

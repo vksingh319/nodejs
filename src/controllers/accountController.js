@@ -1,5 +1,41 @@
 const controller = {};
 
+controller.listChart  = (req, res) => {
+  if(!( req.session.user && req.session.user.id)){
+    res.redirect('/');
+  }
+
+  var date = new Date();
+  var fromDate = new Date(date.getFullYear(), date.getMonth(), 1);
+  var toDate = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+
+  if(req.query && req.query.fromDate){
+    fromDate = new Date(req.query.fromDate);
+  } 
+  if(req.query && req.query.toDate){
+    toDate = new Date(req.query.toDate);
+  }
+
+  fromDate.setHours(0,0,0);
+  toDate.setHours(0,0,0);
+
+  let userId = req.session.user.id;
+  if(req.session.user.role == 'SUPER_ADMIN'){
+    userId = 0;
+  }
+
+  req.getConnection((err, conn) => {
+    conn.query('SELECT * FROM account WHERE (user = ? OR 0 = ?) AND dolDate BETWEEN ? AND ? ORDER BY dolDate DESC', [ userId , userId ,fromDate, toDate],(err, account) => {
+     if (err) {
+      res.json(err);
+     }
+     res.render('chart', {
+        data: account
+     });
+    });
+  });
+}
+
 controller.list = (req, res) => {
   if(!( req.session.user && req.session.user.id)){
     res.redirect('/');
@@ -130,10 +166,13 @@ controller.update = (req, res) => {
   }
 
   const { id } = req.params;
-  const newCustomer = req.body;
+  const data = req.body;
+  var hoursArray = data.hours.split(':');
+  data.timeMin = parseInt(hoursArray[0])*60 + parseInt(hoursArray[1]);  
+
   req.getConnection((err, conn) => {
 
-  conn.query('UPDATE account set ? where id = ?', [newCustomer, id], (err, rows) => {
+  conn.query('UPDATE account set ? where id = ?', [data, id], (err, rows) => {
     res.redirect('/');
   });
   });

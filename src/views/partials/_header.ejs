@@ -10,7 +10,6 @@
   <script src="https://momentjs.com/downloads/moment.js"></script>
   <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.min.js"></script>
   <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/daterangepicker/daterangepicker.css" />
- 
   <script  type="text/javascript">
      $(document).ready(function () {
         var x = document.cookie;
@@ -37,6 +36,13 @@
           $("#searchForm").submit();
         });
 
+        $('#show_hide').click(function(){
+          var txt = $("#moreInfo").is(':visible') ? 'Read More' : 'Read Less';
+          $("#show_hide").text(txt);
+          $('#moreInfo').toggle("slide");
+        });
+       
+
         $('#addLog').click(function() {
           var $createLogDiv = $('#createLog');
           var $displayDiv = $('#displayLog');
@@ -59,6 +65,7 @@
             var results = regex.exec(location.search);
             return results === null ? '' : decodeURIComponent(results[1].replace(/\+/g, ' '));
         };
+
         function exportTableToExcel(tableID, filename = ''){
         var downloadLink;
         var dataType = 'application/vnd.ms-excel';
@@ -127,6 +134,7 @@
       <div id="reportLink" style="display:none;">
         <a class="navbar-brand" href="/l/report">Report</a>
       </div>
+      <a class="navbar-brand" href="/l/chart">Chart</a>
       <form action="/l/dashboard" method="GET" id="searchForm">
         <div class="form-group">
               <div id="reportrange" style="background: #fff; cursor: pointer; padding: 5px 10px; border: 
