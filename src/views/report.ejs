@@ -39,12 +39,12 @@
           </thead>
           <tbody>  
             <% if (userReport) { %>
-              <% for(var i = 0; i < data.length; i++) { %>
+              <% for(var i = 0; i < userReport.length; i++) { %>
                 <tr>
                   <td><%= (i + 1) %></td>
                   <td><%= userReport[i].code %></td>
                   <td><%= userReport[i].username %></td>
-                  <td><%= userReport[i].hours %> : <%= data[i].min %> </td>
+                  <td><%= userReport[i].hours %> : <%= userReport[i].min %> </td>
                 </tr>
               <% } %>
             <% } %>
