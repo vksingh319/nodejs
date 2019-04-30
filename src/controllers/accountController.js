@@ -54,10 +54,11 @@ controller.list = (req, res) => {
 
   fromDate.setHours(0,0,0);
   toDate.setHours(0,0,0);
+  let userId = req.session.user.id;
 
   let projectDetails ;
   req.getConnection((err, conn) => {
-    conn.query('SELECT code,displayCode FROM projects',(err, projects) => {
+    conn.query('SELECT code,displayCode FROM user_projects join projects on projects.id = user_projects.projectId where user_projects.userId = ? order by user_projects.sortBy',[userId],(err, projects) => {
       if (err) {
       res.json(err);
       }
@@ -65,7 +66,6 @@ controller.list = (req, res) => {
     });
   });
 
-  let userId = req.session.user.id;
   if(req.session.user.role == 'SUPER_ADMIN'){
     userId = 0;
   }
