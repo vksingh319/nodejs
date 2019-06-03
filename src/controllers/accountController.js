@@ -71,13 +71,51 @@ controller.list = (req, res) => {
   }
 
   req.getConnection((err, conn) => {
-    conn.query('SELECT * FROM account WHERE (user = ? OR 0 = ?) AND dolDate BETWEEN ? AND ? ORDER BY dolDate DESC', [ userId , userId ,fromDate, toDate],(err, account) => {
+    conn.query('SELECT * FROM account WHERE (user = ? OR 0 = ?) AND dolDate BETWEEN ? AND ? '
+            +' WHERE code NOT IN (\'PL\', \'FIRM_VACATION\') '
+            +'  ORDER BY dolDate DESC', [ userId , userId ,fromDate, toDate],(err, account) => {
      if (err) {
       res.json(err);
      }
      res.render('accounts', {
         data: account,
         projectData : projectDetails
+     });
+    });
+  });
+};
+
+controller.listExpense = (req, res) => {
+  if(!( req.session.user && req.session.user.id && req.session.user.role == 'SUPER_ADMIN')){
+    res.redirect('/');
+  }
+
+  var date = new Date();
+  var fromDate = new Date(date.getFullYear(), date.getMonth(), 1);
+  var toDate = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+
+  if(req.query && req.query.fromDate){
+    fromDate = new Date(req.query.fromDate);
+  } 
+  if(req.query && req.query.toDate){
+    toDate = new Date(req.query.toDate);
+  }
+
+  fromDate.setHours(0,0,0);
+  toDate.setHours(0,0,0);
+
+  let expenseData;
+  req.getConnection((err, conn) => {
+    conn.query('SELECT code, sum(timeMin) as totalMin, FLOOR(sum(timeMin)/60) as hours, (sum(timeMin)%60) as min ' +
+                ' FROM account WHERE dolDate BETWEEN ? AND ? AND billable = \'on\' AND code NOT IN (\'PL\', \'FIRM_VACATION\')  '+
+                ' group by code', 
+    [fromDate, toDate],(err, expenseData) => {
+     if (err) {
+      res.json(err);
+     }
+
+     res.render('expense', {
+        expenseData: expenseData,
      });
     });
   });
@@ -103,9 +141,12 @@ controller.listReport = (req, res) => {
   fromDate.setHours(0,0,0);
   toDate.setHours(0,0,0);
 
-  let userReport ;
+  let userReport, userReportNonBillable , mainDataNoBillable;
   req.getConnection((err, conn) => {
-    conn.query('SELECT code, users.username,sum(timeMin) as totalMin, FLOOR(sum(timeMin)/60) as hours, (sum(timeMin)%60) as min FROM account inner join users on account.user = users.id WHERE dolDate BETWEEN ? AND ? group by code, users.username', 
+    conn.query('SELECT code, users.username,sum(timeMin) as totalMin, FLOOR(sum(timeMin)/60) as hours, (sum(timeMin)%60) as min ' +
+               ' FROM account inner join users on account.user = users.id ' +
+               ' WHERE dolDate BETWEEN ? AND ? AND billable =  \'on\'  AND code NOT IN (\'PL\', \'FIRM_VACATION\') ' +
+               ' group by code, users.username', 
     [fromDate, toDate],(err, reportData) => {if (err) {
       res.json(err);
       }
@@ -114,15 +155,42 @@ controller.listReport = (req, res) => {
   });
 
   req.getConnection((err, conn) => {
-    conn.query('SELECT code, sum(timeMin) as totalMin, FLOOR(sum(timeMin)/60) as hours, (sum(timeMin)%60) as min FROM account WHERE dolDate BETWEEN ? AND ? group by code', 
+    conn.query('SELECT code, users.username,sum(timeMin) as totalMin, FLOOR(sum(timeMin)/60) as hours, (sum(timeMin)%60) as min ' +
+               ' FROM account inner join users on account.user = users.id ' +
+               ' WHERE dolDate BETWEEN ? AND ? AND billable =  \'Off\'  AND code NOT IN (\'PL\', \'FIRM_VACATION\') ' +
+               ' group by code, users.username', 
+    [fromDate, toDate],(err, reportData) => {if (err) {
+      res.json(err);
+      }
+      userReportNonBillable  = reportData
+    });
+  });
+
+  req.getConnection((err, conn) => {
+    conn.query('SELECT code, sum(timeMin) as totalMin, FLOOR(sum(timeMin)/60) as hours, (sum(timeMin)%60) as min ' +
+              ' FROM account WHERE dolDate BETWEEN ? AND ? AND billable = \'Off\'  AND code NOT IN (\'PL\', \'FIRM_VACATION\') '+
+              ' group by code', 
+    [fromDate, toDate],(err, reportData) => {if (err) {
+      res.json(err);
+      }
+      mainDataNoBillable  = reportData
+    });
+  });
+
+  req.getConnection((err, conn) => {
+    conn.query('SELECT code, sum(timeMin) as totalMin, FLOOR(sum(timeMin)/60) as hours, (sum(timeMin)%60) as min ' +
+                ' FROM account WHERE dolDate BETWEEN ? AND ? AND billable = \'on\'  AND code NOT IN (\'PL\', \'FIRM_VACATION\') '+
+                ' group by code', 
     [fromDate, toDate],(err, reportData) => {
      if (err) {
       res.json(err);
      }
 
      res.render('report', {
-        data: reportData,
-        userReport : userReport
+        billableMain: reportData,
+        billableUser : userReport,
+        nonBillableMain : mainDataNoBillable,
+        nonBillableUser : userReportNonBillable
      });
     });
   });

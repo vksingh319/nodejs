@@ -14,12 +14,12 @@
           </tr>
         </thead>
         <tbody>  
-          <% if (data) { %>
-            <% for(var i = 0; i < data.length; i++) { %>
+          <% if (billableMain) { %>
+            <% for(var i = 0; i < billableMain.length; i++) { %>
               <tr>
                 <td><%= (i + 1) %></td>
-                <td><%= data[i].code %></td>
-                <td><%= data[i].hours %> : <%= data[i].min %> </td>
+                <td><%= billableMain[i].code %></td>
+                <td><%= billableMain[i].hours %> : <%= billableMain[i].min %> </td>
               </tr>
             <% } %>
           <% } %>
@@ -38,13 +38,63 @@
             </tr>
           </thead>
           <tbody>  
-            <% if (userReport) { %>
-              <% for(var i = 0; i < userReport.length; i++) { %>
+            <% if (billableUser) { %>
+              <% for(var i = 0; i < billableUser.length; i++) { %>
                 <tr>
                   <td><%= (i + 1) %></td>
-                  <td><%= userReport[i].code %></td>
-                  <td><%= userReport[i].username %></td>
-                  <td><%= userReport[i].hours %> : <%= userReport[i].min %> </td>
+                  <td><%= billableUser[i].code %></td>
+                  <td><%= billableUser[i].username %></td>
+                  <td><%= billableUser[i].hours %> : <%= billableUser[i].min %> </td>
+                </tr>
+              <% } %>
+            <% } %>
+          </tbody>
+        </table>
+    </div>
+  </div>
+  <div class="row">
+    <div class="col-md-5" id="displayLog">
+      <span style="font-size:20px;text-align:center;display: block;">NON BILLABLE MAIN REPORT</span>
+      <table class="table table-bordered table-hover">
+        <thead>
+          <tr style="font-weight: bold;font-size: 15px;color: cornflowerblue;">
+            <th>#</th>
+            <th>Project Code</th>
+            <th>Hours</th>
+          </tr>
+        </thead>
+        <tbody>  
+          <% if (nonBillableMain) { %>
+            <% for(var i = 0; i < nonBillableMain.length; i++) { %>
+              <tr>
+                <td><%= (i + 1) %></td>
+                <td><%= nonBillableMain[i].code %></td>
+                <td><%= nonBillableMain[i].hours %> : <%= nonBillableMain[i].min %> </td>
+              </tr>
+            <% } %>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+    <div class="col-md-7" id="displayLog">  
+      <span style="font-size:20px;text-align:center;display: block;">NON BILLABLE SUB REPORT</span>
+      <table class="table table-bordered table-hover">
+          <thead>
+            <tr style="font-weight: bold;font-size: 15px;color: cornflowerblue;">
+              <th>#</th>
+              <th>Project Code</th>
+              <th>Username</th>
+              <th>Hours</th>
+            </tr>
+          </thead>
+          <tbody>  
+            <% if (nonBillableUser) { %>
+              <% for(var i = 0; i < nonBillableUser.length; i++) { %>
+                <tr>
+                  <td><%= (i + 1) %></td>
+                  <td><%= nonBillableUser[i].code %></td>
+                  <td><%= nonBillableUser[i].username %></td>
+                  <td><%= nonBillableUser[i].hours %> : <%= nonBillableUser[i].min %> </td>
                 </tr>
               <% } %>
             <% } %>

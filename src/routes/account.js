@@ -5,6 +5,7 @@ const accountController = require('../controllers/accountController');
 router.get('/l/dashboard', accountController.list);
 router.get('/l/chart', accountController.listChart);
 router.get('/l/report', accountController.listReport);
+router.get('/l/expense', accountController.listExpense);
 router.post('/l/add', accountController.save);
 router.get('/l/update/:id', accountController.edit);
 router.post('/l/update/:id', accountController.update);
