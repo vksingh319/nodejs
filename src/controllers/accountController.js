@@ -66,18 +66,34 @@ controller.list = (req, res) => {
     });
   });
 
+  
   if(req.session.user.role == 'SUPER_ADMIN'){
     userId = 0;
   }
 
+
+  let dataNonBill;
   req.getConnection((err, conn) => {
     conn.query('SELECT * FROM account WHERE (user = ? OR 0 = ?) AND dolDate BETWEEN ? AND ? '
-            +' WHERE code NOT IN (\'PL\', \'FIRM_VACATION\') '
+            +' AND billable = \'Off\' AND code NOT IN (\'PL\', \'FIRM_VACATION\') '
+            +'  ORDER BY dolDate DESC', [ userId , userId ,fromDate, toDate],(err, data) => {
+      if (err) {
+        res.json(err);
+      }
+      dataNonBill = data
+    });
+  });
+
+
+  req.getConnection((err, conn) => {
+    conn.query('SELECT * FROM account WHERE (user = ? OR 0 = ?) AND dolDate BETWEEN ? AND ? '
+            +' AND billable = \'on\' AND code NOT IN (\'PL\', \'FIRM_VACATION\') '
             +'  ORDER BY dolDate DESC', [ userId , userId ,fromDate, toDate],(err, account) => {
      if (err) {
       res.json(err);
      }
      res.render('accounts', {
+        dataNonBill : dataNonBill,
         data: account,
         projectData : projectDetails
      });

@@ -17,6 +17,7 @@
 <div class="mt-5">
   <div class="row">
     <div class="col-md-12" id="displayLog">
+      <h3 style="margin-left: 45%"> Billable </h3>
       <table class="table table-striped" id="logDataTable">
         <thead>
           <tr style="font-weight: bold;font-size: 15px;color: cornflowerblue;">
@@ -65,6 +66,57 @@
           <% } %>
         </tbody>
       </table>
+
+      <h3 style="margin-left: 45%; margin-top: 30px"> Non Billable </h3>
+      <table class="table table-striped" id="logDataTableNonBill">
+        <thead>
+          <tr style="font-weight: bold;font-size: 15px;color: cornflowerblue;">
+            <th  >#</th>
+            <th  >Project Code</th>
+            <th  >Auto</th>
+            <th  >Date</th>
+            <th  >Hours</th>
+            <th  >Is Billable</th>
+            <th  >Comments</th>
+            <th  >Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (dataNonBill) { %>
+            <% for(var i = 0; i < dataNonBill.length; i++) { %>
+              <tr>
+                <td><%= (i + 1) %></td>
+                <td><%= dataNonBill[i].code %></td>
+                <td><%= dataNonBill[i].autoSwitch %></td>
+                <td><%= dataNonBill[i].dol %></td>
+                <td><%= dataNonBill[i].hours %></td>
+                <td><%= dataNonBill[i].billable %></td>
+                <td> <%= dataNonBill[i].comments.substring(0, 30) %> 
+                     <div id="moreInfo" style="display:none">
+                        <%= dataNonBill[i].comments %>
+                     </div>
+                     <a id="show_hide" name="show_hide" href="#">Read more</a>
+                </td>
+                <td>
+                  <a href="/l/update/<%= data[i].id %>" class="btn btn-info">Edit</a>
+                  <a href="/l/delete/<%= data[i].id %>" class="btn btn-danger">Delete</a>
+                </td>
+              </tr>
+            <% } %>
+          <tr style="font-weight: bold;font-size: 15px;color: cornflowerblue;">
+                <td  >Total</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+                <td  ><%= calculateSum() %></td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
+              </tr>
+          <% } %>
+        </tbody>
+      </table>
+
       <button onclick="exportTableToExcel('logDataTable', 'logDataTable')">Export Table Data To Excel File</button>
     </div>
     <div class="col-md-4" id="createLog" style="display: none;">
