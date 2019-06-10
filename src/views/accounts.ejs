@@ -1,6 +1,6 @@
 <% include partials/_header %>
 <%
-  calculateSum = function() {
+  calculateSum = function(data) {
     let sum = 0; 
     for(var i = 0; i < data.length; i++) {
       sum = sum + data[i].timeMin;
@@ -11,6 +11,7 @@
 
     return hours + ":" + minutes;
   }
+  
 %>
 
 
@@ -58,7 +59,7 @@
                 <td>-</td>
                 <td>-</td>
                 <td>-</td>
-                <td  ><%= calculateSum() %></td>
+                <td  ><%= calculateSum(data) %></td>
                 <td>-</td>
                 <td>-</td>
                 <td>-</td>
@@ -108,7 +109,7 @@
                 <td>-</td>
                 <td>-</td>
                 <td>-</td>
-                <td  ><%= calculateSum() %></td>
+                <td  ><%= calculateSum(dataNonBill) %></td>
                 <td>-</td>
                 <td>-</td>
                 <td>-</td>
