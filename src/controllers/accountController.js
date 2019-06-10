@@ -85,25 +85,29 @@ controller.list = (req, res) => {
   });
 
   
-  let paidLeave;
+  let paidLeave = 0;
   req.getConnection((err, conn) => {
-    conn.query('SELECT sum(timeMin)/8 from account where user = ? and dol < now() and code = \'PL\' ', 
+    conn.query('SELECT sum(timeMin)/8 as value from account where user = ? and dol < now() and code = \'PL\' ', 
           [ userId],(err, data) => {
       if (err) {
         res.json(err);
       }
-      paidLeave = data
+      if(data && data.length > 0){
+        paidLeave =  data[0].value;
+      }
     });
   });
 
-  let leaveBalance;
+  let leaveBalance = 0;
   req.getConnection((err, conn) => {
-    conn.query('SELECT sum(i_balance)*8 from leaves where user_id = ? and dom < now() ', 
+    conn.query('SELECT sum(i_balance)*8 as value from leaves where user_id = ? and dom < now() ', 
           [ userId],(err, data) => {
       if (err) {
         res.json(err);
       }
-      leaveBalance = data
+      if(data && data.length > 0){
+        leaveBalance =  data[0].value;
+      }
     });
   });
 
