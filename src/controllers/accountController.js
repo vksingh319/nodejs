@@ -87,7 +87,7 @@ controller.list = (req, res) => {
   
   let paidLeave = 0;
   req.getConnection((err, conn) => {
-    conn.query('SELECT sum(timeMin)/8 as value from account where user = ? and dol < now() and code = \'PL\' ', 
+    conn.query('SELECT sum(timeMin)/60 as value from account where user = ? and dol < now() and code = \'PL\' ', 
           [ userId],(err, data) => {
       if (err) {
         res.json(err);
