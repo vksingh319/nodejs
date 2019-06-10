@@ -84,6 +84,28 @@ controller.list = (req, res) => {
     });
   });
 
+  
+  let paidLeave;
+  req.getConnection((err, conn) => {
+    conn.query('SELECT sum(timeMin)/8 from account where user = 2 and dol < now() and code = \'PL\' ', 
+          [ userId],(err, data) => {
+      if (err) {
+        res.json(err);
+      }
+      paidLeave = data
+    });
+  });
+
+  let leaveBalance;
+  req.getConnection((err, conn) => {
+    conn.query('SELECT sum(i_balance)*8 from leaves where user_id = 2 and dom < now() ', 
+          [ userId],(err, data) => {
+      if (err) {
+        res.json(err);
+      }
+      leaveBalance = data
+    });
+  });
 
   req.getConnection((err, conn) => {
     conn.query('SELECT * FROM account WHERE (user = ? OR 0 = ?) AND dolDate BETWEEN ? AND ? '
@@ -95,7 +117,8 @@ controller.list = (req, res) => {
      res.render('accounts', {
         dataNonBill : dataNonBill,
         data: account,
-        projectData : projectDetails
+        projectData : projectDetails,
+        leaveData : ( (leaveBalance - paidLeave) / 8)
      });
     });
   });
