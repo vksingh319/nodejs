@@ -87,7 +87,7 @@ controller.list = (req, res) => {
   
   let paidLeave;
   req.getConnection((err, conn) => {
-    conn.query('SELECT sum(timeMin)/8 from account where user = 2 and dol < now() and code = \'PL\' ', 
+    conn.query('SELECT sum(timeMin)/8 from account where user = ? and dol < now() and code = \'PL\' ', 
           [ userId],(err, data) => {
       if (err) {
         res.json(err);
@@ -98,7 +98,7 @@ controller.list = (req, res) => {
 
   let leaveBalance;
   req.getConnection((err, conn) => {
-    conn.query('SELECT sum(i_balance)*8 from leaves where user_id = 2 and dom < now() ', 
+    conn.query('SELECT sum(i_balance)*8 from leaves where user_id = ? and dom < now() ', 
           [ userId],(err, data) => {
       if (err) {
         res.json(err);
