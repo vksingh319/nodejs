@@ -1,0 +1,33 @@
+<% include partials/_header %>
+<div class="mt-5">
+  <div class="row">
+    <div class="col-md-12" id="displayLog">
+        <table class="table table-striped" id="logDataTable">
+            <thead>
+              <tr style="font-weight: bold;font-size: 15px;color: cornflowerblue;">
+                <th  >Month</th>
+                <th  >Leave</th>
+                <th  >Firm Vacation</th>
+                <th  >Actual Hours</th>
+                <th  >Extra Hours</th>
+              </tr>
+            </thead>
+            <tbody>
+              <% if (hoursData) { %>
+                <% for(var i = 0; i < hoursData.length; i++) { %>
+                  <tr>
+                    <td><%=hoursData[i].mol %></td>
+                    <td><%=hoursData[i].leaveVacation %></td>
+                    <td><%=hoursData[i].firmVacation %></td>
+                    <td><%=hoursData[i].actualHours %></td>
+                    <td><%=hoursData[i].extraHours %></td>
+                  </tr>
+               <% } %>  
+               <% } %>  
+            </tbody>
+         </table> 
+    </div>  
+  </div>
+</div>
+
+<% include partials/_footer %>

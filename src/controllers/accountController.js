@@ -36,6 +36,34 @@ controller.listChart  = (req, res) => {
   });
 }
 
+controller.listExtraHours = (req, res) => {
+  if(!( req.session.user && req.session.user.id)){
+    res.redirect('/');
+  }
+  let userId = req.session.user.id;
+
+  let hoursData;
+  req.getConnection((err, conn) => {
+    conn.query('SELECT MONTHNAME(dol) as mol, '+
+               ' (sum(case when code IN (\'PL\') then timeMin else 0 end))/(60*8) as leaveVacation, '+
+              ' (sum(case when code IN (\'FIRM_VACATION\') then timeMin else 0 end))/(60*8) as firmVacation, '+
+              ' (sum(case when code NOT IN (\'PL\', \'FIRM_VACATION\') then timeMin else 0 end))/60 as actualHours, '+
+              ' (sum(timeMin) - (160*60))/60 as extraHours '+
+              ' FROM account  '+
+              ' where billable = \'on\'  '+
+              ' and user = ? '+
+              ' group by MONTH(dol), MONTHNAME(dol) '+
+              ' order by MONTH(dol)', [ userId ],(err, data) => {
+     if (err) {
+      res.json(err);
+     }
+     res.render('hours', {
+      hoursData : data
+     });
+    });
+  });
+
+}
 controller.list = (req, res) => {
   if(!( req.session.user && req.session.user.id)){
     res.redirect('/');
