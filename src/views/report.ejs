@@ -1,5 +1,18 @@
 <% include partials/_header %>
+<%
+  calculateSum = function(data) {
+    let sum = 0; 
+    for(var i = 0; i < data.length; i++) {
+      sum = sum + data[i].timeMin;
+    }
 
+    var hours = Math.floor( sum / 60);          
+    var minutes = sum % 60;
+
+    return hours + ":" + minutes;
+  }
+  
+%>
 
 <div class="mt-5">
   <div class="row">
@@ -22,6 +35,11 @@
                 <td><%= billableMain[i].hours %> : <%= billableMain[i].min %> </td>
               </tr>
             <% } %>
+            <tr style="font-weight: bold;font-size: 15px;color: cornflowerblue;">
+              <td  >Total</td>
+              <td>-</td>
+              <td  ><%= calculateSum(data) %></td>
+            </tr>
           <% } %>
         </tbody>
       </table>
@@ -47,6 +65,12 @@
                   <td><%= billableUser[i].hours %> : <%= billableUser[i].min %> </td>
                 </tr>
               <% } %>
+              <tr style="font-weight: bold;font-size: 15px;color: cornflowerblue;">
+                <td  >Total</td>
+                <td>-</td>
+                <td>-</td>
+                <td  ><%= calculateSum(data) %></td>
+              </tr>
             <% } %>
           </tbody>
         </table>
@@ -72,6 +96,11 @@
                 <td><%= nonBillableMain[i].hours %> : <%= nonBillableMain[i].min %> </td>
               </tr>
             <% } %>
+            <tr style="font-weight: bold;font-size: 15px;color: cornflowerblue;">
+              <td  >Total</td>
+              <td>-</td>
+              <td  ><%= calculateSum(data) %></td>
+            </tr>
           <% } %>
         </tbody>
       </table>
@@ -97,6 +126,12 @@
                   <td><%= nonBillableUser[i].hours %> : <%= nonBillableUser[i].min %> </td>
                 </tr>
               <% } %>
+              <tr style="font-weight: bold;font-size: 15px;color: cornflowerblue;">
+                <td  >Total</td>
+                <td>-</td>
+                <td>-</td>
+                <td  ><%= calculateSum(data) %></td>
+              </tr>
             <% } %>
           </tbody>
         </table>
