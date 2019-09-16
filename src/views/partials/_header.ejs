@@ -29,6 +29,15 @@
         $("#toDate").val(endOfMonth);
         $("#dol").val(today);
 
+        $('#code').change(function(){
+          if(this.value == 'PL' || this.value == 'FIRM_VACATION'){
+              $("#billable").attr('disabled', true);
+              $("#autoSwitch").attr('disabled', true);
+          } else {
+            $("#billable").attr('disabled', false);
+              $("#autoSwitch").attr('disabled', false);
+          }
+        });
         $('#autoSwitch').click(function() {
           $('#manual').toggle("slide");
         });

@@ -280,6 +280,11 @@ controller.save = (req, res) => {
   var hoursArray = data.hours.split(':');
   data.timeMin = parseInt(hoursArray[0])*60 + parseInt(hoursArray[1]);
   data.user = req.session.user.id;
+
+  if(data.code == 'PL' || data.code == 'FIRM_VACATION'){
+    data.autoSwitch = 'on';
+    data.billable = 'on';
+  }
   
   req.getConnection((err, connection) => {
     const query = connection.query('INSERT INTO account set ?', data, (err, account) => {
