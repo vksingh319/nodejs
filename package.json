@@ -13,7 +13,8 @@
     "moment": "^2.24.0",
     "morgan": "^1.9.0",
     "mysql": "^2.15.0",
-    "swagger-ui-express": "^4.0.2"
+    "swagger-ui-express": "^4.0.2",
+    "yarn": "^1.17.3"
   },
   "devDependencies": {
     "express-session": "^1.16.1",

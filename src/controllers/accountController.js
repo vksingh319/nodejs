@@ -42,18 +42,38 @@ controller.listExtraHours = (req, res) => {
   }
   let userId = req.session.user.id;
 
+  if(req.session.user.role == 'SUPER_ADMIN'){
+    userId = 0;
+  }
+
+  var date = new Date();
+  var fromDate = new Date(date.getFullYear(), date.getMonth(), 1);
+  var toDate = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+
+  if(req.query && req.query.fromDate){
+    fromDate = new Date(req.query.fromDate);
+  }
+  if(req.query && req.query.toDate){
+    toDate = new Date(req.query.toDate);
+  }
+
+  fromDate.setHours(0,0,0);
+  toDate.setHours(0,0,0);
+
+
   let hoursData;
   req.getConnection((err, conn) => {
-    conn.query('SELECT MONTHNAME(dol) as mol, '+
+    conn.query('SELECT users.username,MONTHNAME(dol) as mol, '+
                ' (sum(case when code IN (\'PL\') then timeMin else 0 end))/(60*8) as leaveVacation, '+
               ' (sum(case when code IN (\'FIRM_VACATION\') then timeMin else 0 end))/(60*8) as firmVacation, '+
               ' (sum(case when code NOT IN (\'PL\', \'FIRM_VACATION\') then timeMin else 0 end))/60 as actualHours, '+
               ' (sum(timeMin) - (160*60))/60 as extraHours '+
-              ' FROM account  '+
+              ' FROM account join users on account.user = users.id '+
               ' where billable = \'on\'  '+
-              ' and user = ? '+
-              ' group by MONTH(dol), MONTHNAME(dol) '+
-              ' order by MONTH(dol)', [ userId ],(err, data) => {
+              ' and (user = ? OR 0 = ?)  '+
+              ' and dolDate BETWEEN ? AND ? '+
+             ' group by users.username, MONTH(dol), MONTHNAME(dol) '+
+              ' order by MONTH(dol)', [ userId, userId, fromDate, toDate ],(err, data) => {
      if (err) {
       res.json(err);
      }

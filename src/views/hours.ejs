@@ -5,6 +5,7 @@
         <table class="table table-striped" id="logDataTable">
             <thead>
               <tr style="font-weight: bold;font-size: 15px;color: cornflowerblue;">
+		<th> User </th>	
                 <th  >Month</th>
                 <th  >Leave</th>
                 <th  >Firm Vacation</th>
@@ -16,6 +17,8 @@
               <% if (hoursData) { %>
                 <% for(var i = 0; i < hoursData.length; i++) { %>
                   <tr>
+
+		    <td><%=hoursData[i].username %></td>
                     <td><%=hoursData[i].mol %></td>
                     <td><%=hoursData[i].leaveVacation %></td>
                     <td><%=hoursData[i].firmVacation %></td>

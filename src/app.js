@@ -15,7 +15,7 @@ const accountRoutes = require('./routes/account');
 
 const app = express();
   // settings
-  app.set('port', process.env.PORT || 3000);
+  app.set('port', process.env.PORT || 80);
   app.set('views', path.join(__dirname, 'views'));
   app.set('view engine', 'ejs');
 
@@ -26,8 +26,8 @@ const app = express();
   app.use(morgan('dev'));
   app.use(myConnection(mysql, {
     host: 'localhost',
-    user: 'root',
-    password: 'root',
+    user: 'bril',
+    password: 'bril@2019',
     port: 3306,
     database: 'brilworks'
   }, 'single'));
