@@ -14,7 +14,7 @@
     "morgan": "^1.9.0",
     "mysql": "^2.15.0",
     "swagger-ui-express": "^4.0.2",
-    "yarn": "^1.17.3"
+    "yarn": "^1.22.0"
   },
   "devDependencies": {
     "express-session": "^1.16.1",
