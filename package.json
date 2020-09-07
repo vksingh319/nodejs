@@ -18,7 +18,7 @@
   },
   "devDependencies": {
     "express-session": "^1.16.1",
-    "jquery": "^3.4.0",
+    "jquery": "^3.5.0",
     "nodemon": "^1.17.3"
   },
   "scripts": {
